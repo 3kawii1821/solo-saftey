@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Bypass API</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #0a0a0a;
+            color: #0f0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #0f0;
+        }
+        h1 { color: #0f0; }
+        pre {
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .status {
+            color: #0f0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔓 License Bypass API</h1>
+        <p class="status">✅ Status: <span id="status">ACTIVE</span></p>
+        <p>Endpoint: <code>https://[your-github-username].github.io/[repo-name]/api/verify-license</code></p>
+        <p>Method: <code>POST</code> (simulated via GET with data in URL)</p>
+        
+        <h2>📥 Last Request:</h2>
+        <pre id="lastRequest">No requests yet</pre>
+        
+        <h2>📤 Response:</h2>
+        <pre id="response">{"status": "valid", "message": "License Verified Successfully"}</pre>
+        
+        <h2>📋 How to use:</h2>
+        <pre>
+-- Lua hook (modified for GitHub Pages)
+local oldHttp = PerformHttpRequest
+
+local fakeLicense = "PORN-LJHL-RNJ3"
+
+PerformHttpRequest = function(url, cb, method, data, headers)
+    local urlStr = tostring(url or "")
+    
+    if urlStr:find("solo") and urlStr:find("safety") then
+        print("^1[HOOK] INTERCEPTED: " .. urlStr)
+        
+        -- GitHub Pages can't receive POST, so we use a trick
+        -- We'll just return fake response directly in Lua
+        if cb then
+            cb(200, '{"status": "valid", "message": "License Verified Successfully"}', {
+                ["Content-Type"] = "application/json"
+            })
+        end
+        return
+    end
+    
+    return oldHttp(url, cb, method, data, headers)
+end
+
+print("^2[HOOK] Bypass active")
+        </pre>
+    </div>
+
+    <script>
+        // This simulates the Python server but in browser
+        // Note: GitHub Pages cannot receive POST, so this is just for show
+        
+        // Display when page loads
+        document.getElementById('status').innerHTML = 'ACTIVE (Static Mode)';
+        
+        // You can also create a simple JSON endpoint
+        const response = {
+            "status": "valid",
+            "message": "License Verified Successfully"
+        };
+        
+        // If you want to simulate receiving data via URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const licenseKey = urlParams.get('licenseKey');
+        
+        if (licenseKey) {
+            document.getElementById('lastRequest').innerHTML = JSON.stringify({
+                licenseKey: licenseKey,
+                productUUID: urlParams.get('productUUID') || 'SOLOQIL6PLRS134RPRDTLFCLFCG211TB',
+                timestamp: new Date().toISOString()
+            }, null, 2);
+        }
+        
+        console.log('License API ready:', response);
+    </script>
+</body>
+</html>
